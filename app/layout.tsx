@@ -10,6 +10,10 @@ export const metadata: Metadata = {
     'Nine AI-powered writing tools that give every pupil real-time, individualised ' +
     'feedback. Built for the WriFe curriculum.',
   metadataBase: new URL('https://resource.wrife.co.uk'),
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
   openGraph: {
     siteName: 'WriFe Resources',
     locale: 'en_GB',
