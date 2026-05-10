@@ -20,9 +20,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const { data: tierData } = await (supabase as any).rpc('get_user_tier', { uid: user.id });
   const tier: Tier = (tierData as Tier | null) ?? 'free';
 
+  const { data: profileRow } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+  const role = (profileRow?.role as string | undefined) ?? 'teacher';
+
   return (
     <SubscriptionProvider tier={tier}>
-      <Header user={user} tier={tier} />
+      <Header user={user} tier={tier} role={role} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
     </SubscriptionProvider>
   );

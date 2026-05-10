@@ -144,6 +144,26 @@ export interface Database {
         Insert: Omit<Database['public']['Tables']['usage_quotas']['Row'], 'id'>;
         Update: Partial<Database['public']['Tables']['usage_quotas']['Insert']>;
       };
+      ai_tool_assignments: {
+        Row: {
+          id: string;
+          class_id: string;
+          teacher_id: string;
+          tool_slug: ToolSlug;
+          lesson_number: number | null;
+          title: string;
+          instructions: string | null;
+          due_date: string | null;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<
+          Database['public']['Tables']['ai_tool_assignments']['Row'],
+          'id' | 'created_at' | 'updated_at'
+        >;
+        Update: Partial<Database['public']['Tables']['ai_tool_assignments']['Insert']>;
+      };
       classes: {
         Row: {
           id: string;

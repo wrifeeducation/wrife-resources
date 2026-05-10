@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { BookOpen, ChevronDown, Menu, X, LogOut, User, LayoutDashboard, Home } from 'lucide-react';
+import { BookOpen, ChevronDown, Menu, X, LogOut, User, LayoutDashboard, Home, GraduationCap, ClipboardList, ShieldCheck } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import type { Tier } from '@/lib/subscription/gate';
 import { tierLabel } from '@/lib/subscription/gate';
@@ -12,6 +12,7 @@ import type { User as SupabaseUser } from '@supabase/supabase-js';
 interface HeaderProps {
   user: SupabaseUser;
   tier: Tier;
+  role?: string;
 }
 
 const tierBadgeClass: Record<Tier, string> = {
@@ -21,7 +22,7 @@ const tierBadgeClass: Record<Tier, string> = {
   school:   'tier-badge-school',
 };
 
-export function Header({ user, tier }: HeaderProps) {
+export function Header({ user, tier, role = 'teacher' }: HeaderProps) {
   const router = useRouter();
   const email = user.email ?? '';
   const displayName = (user.user_metadata?.display_name as string | undefined)
@@ -66,22 +67,41 @@ export function Header({ user, tier }: HeaderProps) {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/dashboard"
-            className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
-            All Tools
-          </Link>
-          <Link href="/daily/pwp"
-            className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
-            Daily Practice
-          </Link>
-          <Link href="/resources"
-            className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
-            Resources
-          </Link>
-          <Link href="https://wrife.co.uk"
-            className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
-            ← WriFe App
-          </Link>
+          {role === 'pupil' ? (
+            <>
+              <Link href="/my-tasks" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
+                My Tasks
+              </Link>
+              <Link href="/dashboard" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
+                All Tools
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/dashboard" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
+                All Tools
+              </Link>
+              <Link href="/daily/pwp" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
+                Daily Practice
+              </Link>
+              <Link href="/resources" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
+                Resources
+              </Link>
+              {['teacher', 'school_admin'].includes(role) && (
+                <Link href="/teacher" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
+                  My Classes
+                </Link>
+              )}
+              {['admin', 'wrife_admin'].includes(role) && (
+                <Link href="/admin" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors font-semibold text-wrife-green">
+                  Admin
+                </Link>
+              )}
+              <Link href="https://wrife.co.uk" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
+                ← WriFe App
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Right-side controls */}
@@ -121,38 +141,49 @@ export function Header({ user, tier }: HeaderProps) {
 
                 {/* Menu items */}
                 <div className="py-1">
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors"
-                  >
-                    <LayoutDashboard className="w-4 h-4 text-wrife-muted" />
-                    All Tools
-                  </Link>
-                  <Link
-                    href="/resources"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors"
-                  >
-                    <User className="w-4 h-4 text-wrife-muted" />
-                    Lesson Resources
-                  </Link>
-                  <Link
-                    href="/"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors"
-                  >
-                    <Home className="w-4 h-4 text-wrife-muted" />
-                    Home page
-                  </Link>
-                  <Link
-                    href="https://wrife.co.uk"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors"
-                  >
-                    <BookOpen className="w-4 h-4 text-wrife-muted" />
-                    WriFe App
-                  </Link>
+                  {role === 'pupil' ? (
+                    <>
+                      <Link href="/my-tasks" onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors">
+                        <ClipboardList className="w-4 h-4 text-wrife-muted" />My Tasks
+                      </Link>
+                      <Link href="/dashboard" onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors">
+                        <LayoutDashboard className="w-4 h-4 text-wrife-muted" />All Tools
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/dashboard" onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors">
+                        <LayoutDashboard className="w-4 h-4 text-wrife-muted" />All Tools
+                      </Link>
+                      <Link href="/resources" onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors">
+                        <User className="w-4 h-4 text-wrife-muted" />Lesson Resources
+                      </Link>
+                      {['teacher', 'school_admin'].includes(role) && (
+                        <Link href="/teacher" onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors">
+                          <GraduationCap className="w-4 h-4 text-wrife-muted" />My Classes
+                        </Link>
+                      )}
+                      {['admin', 'wrife_admin'].includes(role) && (
+                        <Link href="/admin" onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-green hover:bg-wrife-cream transition-colors font-semibold">
+                          <ShieldCheck className="w-4 h-4 text-wrife-green" />Admin Dashboard
+                        </Link>
+                      )}
+                      <Link href="/" onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors">
+                        <Home className="w-4 h-4 text-wrife-muted" />Home page
+                      </Link>
+                      <Link href="https://wrife.co.uk" onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-wrife-text hover:bg-wrife-cream transition-colors">
+                        <BookOpen className="w-4 h-4 text-wrife-muted" />WriFe App
+                      </Link>
+                    </>
+                  )}
                 </div>
 
                 <div className="border-t border-wrife-cream-dark pt-1">
@@ -190,13 +221,21 @@ export function Header({ user, tier }: HeaderProps) {
           </div>
 
           <nav className="py-2">
-            {[
-              { href: '/dashboard',   label: 'All Tools' },
-              { href: '/daily/pwp',   label: 'Daily Practice' },
-              { href: '/resources',   label: 'Lesson Resources' },
-              { href: 'https://wrife.co.uk', label: '← WriFe App' },
-              { href: '/',            label: 'Home page' },
-            ].map(({ href, label }) => (
+            {(role === 'pupil'
+              ? [
+                  { href: '/my-tasks', label: 'My Tasks' },
+                  { href: '/dashboard', label: 'All Tools' },
+                ]
+              : [
+                  { href: '/dashboard', label: 'All Tools' },
+                  { href: '/daily/pwp', label: 'Daily Practice' },
+                  { href: '/resources', label: 'Lesson Resources' },
+                  ...(['teacher','school_admin'].includes(role) ? [{ href: '/teacher', label: 'My Classes' }] : []),
+                  ...(['admin','wrife_admin'].includes(role) ? [{ href: '/admin', label: 'Admin Dashboard' }] : []),
+                  { href: 'https://wrife.co.uk', label: '← WriFe App' },
+                  { href: '/', label: 'Home page' },
+                ]
+            ).map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
