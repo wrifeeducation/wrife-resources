@@ -11,7 +11,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   } = await supabase.auth.getUser();
 
   if (!user) {
-    const returnTo = encodeURIComponent('https://resource.wrife.co.uk/');
+    const returnTo = encodeURIComponent('https://resource.wrife.co.uk/dashboard');
     redirect(`https://app.wrife.co.uk/login?redirect=${returnTo}`);
   }
 
