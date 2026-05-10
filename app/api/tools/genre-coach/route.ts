@@ -5,7 +5,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export type Genre = 'narrative' | 'non-fiction' | 'persuasive' | 'poetry';
 
-export const GENRES: { id: Genre; label: string; icon: string; desc: string }[] = [
+const GENRES: { id: Genre; label: string; icon: string; desc: string }[] = [
   { id: 'narrative',    label: 'Narrative',    icon: '📖', desc: 'Stories, characters, plot, setting, dialogue' },
   { id: 'non-fiction',  label: 'Non-Fiction',  icon: '📰', desc: 'Facts, explanation, report, information' },
   { id: 'persuasive',   label: 'Persuasive',   icon: '📣', desc: 'Argument, opinion, rhetoric, evidence' },

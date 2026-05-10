@@ -5,7 +5,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export type ProjectStage = 'idea' | 'planning' | 'drafting' | 'editing' | 'publishing';
 
-export const PROJECT_STAGES: { id: ProjectStage; label: string; icon: string; desc: string }[] = [
+const PROJECT_STAGES: { id: ProjectStage; label: string; icon: string; desc: string }[] = [
   { id: 'idea',       label: 'Idea Stage',       icon: '💡', desc: 'I have an idea but haven\'t started planning yet' },
   { id: 'planning',   label: 'Planning',          icon: '🗺️', desc: 'I\'m planning my structure and content' },
   { id: 'drafting',   label: 'Drafting',          icon: '✏️', desc: 'I\'m writing my first draft' },
