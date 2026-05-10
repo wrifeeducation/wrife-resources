@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* ── shadcn/ui HSL tokens (required by Radix components) ── */
     --background: 0 0% 100%;
     --foreground: 210 29% 24%;
     --card: 0 0% 100%;
@@ -24,6 +25,51 @@
     --input: 0 0% 90%;
     --ring: 145 63% 42%;
     --radius: 0.75rem;
+
+    /* ── WriFe Platform design tokens (matches wrife.co.uk exactly) ── */
+
+    /* Primary brand — Purple (wrife.co.uk teacher portal) */
+    --wrife-blue: #6C5CE7;
+    --wrife-blue-soft: #EDE9FE;
+    --wrife-blue-dark: #4C3FBF;
+
+    /* App accent — Green (Resources sub-app primary) */
+    --wrife-green: #27AE60;
+    --wrife-green-dark: #1E8449;
+    --wrife-green-soft: #D1FAE5;
+
+    /* App accent — Teal (PWP Studio) */
+    --wrife-teal: #00B894;
+    --wrife-teal-soft: #CCFBF1;
+
+    /* App accent — Electric Blue (Interactive Practice) */
+    --wrife-electric: #0984E3;
+    --wrife-electric-soft: #DBEAFE;
+
+    /* CTA — Orange */
+    --wrife-orange: #F5A623;
+    --wrife-orange-soft: #FEF3C7;
+
+    /* Supporting palette */
+    --wrife-yellow: #F5C500;
+    --wrife-yellow-soft: #FEF9C3;
+    --wrife-coral: #E17055;
+    --wrife-coral-soft: #FEE2E2;
+
+    /* Surfaces */
+    --wrife-bg: #FDF8EE;
+    --wrife-bg-alt: #F0EEFF;
+    --wrife-surface: #FFFFFF;
+    --wrife-border: #E8E0D5;
+
+    /* Text */
+    --wrife-text-main: #2D3436;
+    --wrife-text-muted: #636E72;
+    --wrife-danger: #E11D48;
+
+    /* Shadows */
+    --shadow-soft: 0 8px 20px rgba(39, 174, 96, 0.10);
+    --shadow-card: 0 4px 12px rgba(39, 174, 96, 0.07);
   }
 
   * {
@@ -31,45 +77,65 @@
   }
 
   body {
-    @apply bg-wrife-cream text-wrife-text antialiased;
+    @apply antialiased;
+    background-color: var(--wrife-bg);
+    color: var(--wrife-text-main);
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold text-wrife-text;
+    font-family: 'Baloo 2', cursive;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--wrife-text-main);
   }
+
+  /* Readable minimum — nothing smaller than 13px */
+  .text-xs  { font-size: 0.8rem !important;  line-height: 1.5; }
+  .text-sm  { font-size: 0.9rem !important;  line-height: 1.55; }
 }
 
 @layer components {
   /* WriFe card pattern */
   .wrife-card {
-    @apply bg-white rounded-xl border border-wrife-cream-dark shadow-sm p-6;
+    @apply bg-white rounded-2xl shadow-sm p-6;
+    border: 1px solid var(--wrife-border);
   }
 
   /* Tool card */
   .tool-card {
-    @apply bg-white rounded-xl border border-wrife-cream-dark shadow-sm p-6
-           transition-all duration-200 hover:shadow-md hover:border-wrife-green
-           cursor-pointer;
+    @apply bg-white rounded-2xl shadow-sm p-6 transition-all duration-200 cursor-pointer;
+    border: 1px solid var(--wrife-border);
+  }
+  .tool-card:hover {
+    box-shadow: var(--shadow-soft);
+    border-color: var(--wrife-green);
   }
 
   .tool-card-locked {
-    @apply bg-white rounded-xl border border-wrife-cream-dark shadow-sm p-6
-           transition-all duration-200 hover:shadow-md cursor-pointer opacity-80;
+    @apply bg-white rounded-2xl shadow-sm p-6 transition-all duration-200 cursor-pointer opacity-80;
+    border: 1px solid var(--wrife-border);
   }
 
   /* Primary button */
   .btn-primary {
-    @apply bg-wrife-green text-white font-semibold px-6 py-3 rounded-lg
-           hover:bg-wrife-green-dark transition-colors duration-150
+    @apply text-white font-bold px-6 py-3 rounded-full transition-colors duration-150
            disabled:opacity-50 disabled:cursor-not-allowed;
+    background-color: var(--wrife-green);
   }
+  .btn-primary:hover { background-color: var(--wrife-green-dark); }
 
   /* Secondary button */
   .btn-secondary {
-    @apply bg-wrife-cream-dark text-wrife-text font-medium px-5 py-2.5 rounded-lg
-           hover:bg-wrife-cream transition-colors duration-150;
+    @apply font-medium px-5 py-2.5 rounded-full transition-colors duration-150;
+    background-color: var(--wrife-bg);
+    color: var(--wrife-text-main);
+    border: 1px solid var(--wrife-border);
   }
+  .btn-secondary:hover { background-color: var(--wrife-border); }
 
   /* Tier badge */
   .tier-badge-free     { @apply bg-gray-100 text-gray-600 text-xs font-medium px-2 py-0.5 rounded-full; }
@@ -79,15 +145,45 @@
 
   /* Surface section headers */
   .surface-header {
-    @apply text-xs font-semibold uppercase tracking-widest text-wrife-muted mb-4;
+    @apply text-xs font-semibold uppercase tracking-widest mb-4;
+    color: var(--wrife-text-muted);
   }
 }
 
 @layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
-  }
+  .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+  .animate-slide-up { animation: slideUp 0.3s ease-out; }
+  .font-display { font-family: 'Baloo 2', cursive; }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* Login page input — focus ring uses green accent */
+.login-input {
+  border: 2px solid var(--wrife-border);
+  background-color: white;
+  color: var(--wrife-text-main);
+  outline: none;
+}
+.login-input:focus {
+  border-color: var(--wrife-green);
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.15);
+}
+
+/* Mascot float animation */
+.mascot-float {
+  animation: float 3s ease-in-out infinite;
 }

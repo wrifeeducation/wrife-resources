@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
@@ -7,12 +8,15 @@ interface LoginPageProps {
   searchParams: { error?: string; redirectTo?: string };
 }
 
-// If already authenticated, skip straight to the dashboard
+const tools = [
+  { value: '9', label: 'AI Writing Tools' },
+  { value: '67', label: 'Curriculum Lessons' },
+  { value: 'Live', label: 'Pupil Feedback' },
+];
+
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (user) {
     redirect(searchParams.redirectTo ?? '/dashboard');
@@ -22,153 +26,203 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const redirectTo = searchParams.redirectTo ?? '/dashboard';
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#FBF8F1',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontFamily: 'Inter, system-ui, sans-serif',
-      padding: '24px',
-    }}>
-      <div style={{ width: '100%', maxWidth: 420 }}>
+    <div className="min-h-screen flex">
+
+      {/* ── Left panel — brand ── */}
+      <div
+        className="hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-10 xl:p-14 relative overflow-hidden"
+        style={{ backgroundColor: 'var(--wrife-green)' }}
+      >
+        {/* Background decorations */}
+        <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-10 pointer-events-none bg-white" />
+        <div
+          className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full opacity-10 pointer-events-none"
+          style={{ backgroundColor: 'var(--wrife-yellow)' }}
+        />
 
         {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
-              background: '#27AE60',
-              borderRadius: 8,
-              width: 36,
-              height: 32,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <svg viewBox="0 0 16 14" fill="none" width="18" height="16">
-                <rect x="0.5" y="0.5" width="7" height="13" rx="1" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
-                <rect x="8.5" y="0.5" width="7" height="13" rx="1" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
-                <line x1="8" y1="1" x2="8" y2="13" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
-              </svg>
-            </div>
-            <span style={{ fontSize: 24, fontWeight: 800, color: '#2C3E50', letterSpacing: '-0.3px' }}>WriFe</span>
-          </Link>
-          <div style={{ marginTop: 8, fontSize: 13, color: '#7F8C8D' }}>AI Writing Tools — Teacher Access</div>
-        </div>
+        <Link href="https://wrife.co.uk" className="flex items-center gap-3 relative z-10">
+          <span
+            className="font-extrabold text-2xl text-white font-display"
+            style={{ fontFamily: 'Baloo 2, cursive' }}
+          >
+            WriFe
+          </span>
+          <span className="text-white/70 text-sm font-medium">Resources</span>
+        </Link>
 
-        {/* Card */}
-        <div style={{
-          background: 'white',
-          borderRadius: 16,
-          padding: '32px 28px',
-          border: '1px solid #E0D8CC',
-          boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-        }}>
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: '#2C3E50', marginBottom: 6, margin: '0 0 6px' }}>
-            Welcome back
-          </h1>
-          <p style={{ fontSize: 14, color: '#7F8C8D', margin: '0 0 24px' }}>
-            Sign in to access your WriFe writing tools
+        {/* Centre content */}
+        <div className="relative z-10 flex flex-col items-start">
+          {/* Mascot */}
+          <div className="mb-8 mascot-float">
+            <Image
+              src="/mascots/pencil-waving.png"
+              alt="WriFe mascot"
+              width={130}
+              height={156}
+              className="drop-shadow-xl"
+            />
+          </div>
+
+          <h2
+            className="text-3xl xl:text-4xl font-extrabold text-white mb-4 leading-tight"
+            style={{ fontFamily: 'Baloo 2, cursive' }}
+          >
+            Nine AI tools.<br />Every lesson.
+          </h2>
+          <p className="text-white/75 text-base leading-relaxed max-w-xs">
+            Real-time, curriculum-aligned writing feedback — built for every pupil in your class.
           </p>
 
+          {/* Trust stats */}
+          <div className="mt-8 flex gap-6">
+            {tools.map((item) => (
+              <div key={item.label}>
+                <div
+                  className="text-2xl font-extrabold text-white"
+                  style={{ fontFamily: 'Baloo 2, cursive', letterSpacing: '-0.02em' }}
+                >
+                  {item.value}
+                </div>
+                <div className="text-xs text-white/60 mt-0.5">{item.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <p className="text-white/40 text-xs relative z-10">
+          © {new Date().getFullYear()} WriFe Education Ltd
+        </p>
+      </div>
+
+      {/* ── Right panel — form ── */}
+      <div
+        className="flex-1 flex flex-col justify-center px-6 py-12 sm:px-10 lg:px-16 xl:px-24"
+        style={{ backgroundColor: 'var(--wrife-surface)' }}
+      >
+        {/* Mobile logo */}
+        <div className="lg:hidden mb-10 flex justify-center">
+          <Link href="https://wrife.co.uk" className="flex items-center gap-2">
+            <span
+              className="font-extrabold text-2xl"
+              style={{ fontFamily: 'Baloo 2, cursive', color: 'var(--wrife-green)' }}
+            >
+              WriFe
+            </span>
+            <span style={{ color: 'var(--wrife-text-muted)' }} className="text-sm">Resources</span>
+          </Link>
+        </div>
+
+        <div className="w-full max-w-sm mx-auto">
+          <div className="mb-8">
+            <h1
+              className="text-2xl sm:text-3xl font-extrabold mb-2"
+              style={{ fontFamily: 'Baloo 2, cursive', color: 'var(--wrife-text-main)' }}
+            >
+              Welcome back
+            </h1>
+            <p style={{ color: 'var(--wrife-text-muted)' }} className="text-sm">
+              Sign in to access your AI writing tools
+            </p>
+          </div>
+
           {error && (
-            <div style={{
-              background: '#FFF1F2',
-              border: '1px solid #FECDD3',
-              color: '#BE123C',
-              padding: '10px 14px',
-              borderRadius: 8,
-              fontSize: 13,
-              marginBottom: 20,
-            }}>
+            <div
+              className="mb-6 p-4 rounded-xl text-sm"
+              style={{
+                backgroundColor: 'var(--wrife-coral-soft)',
+                color: 'var(--wrife-danger)',
+                border: '1px solid var(--wrife-coral)',
+              }}
+            >
               {error}
             </div>
           )}
 
-          <form action={signIn}>
+          <form action={signIn} className="space-y-5">
             <input type="hidden" name="redirectTo" value={redirectTo} />
 
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#2C3E50', marginBottom: 6 }}>
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold mb-2"
+                style={{ color: 'var(--wrife-text-main)' }}
+              >
                 Email address
               </label>
               <input
+                id="email"
                 type="email"
                 name="email"
                 required
                 autoComplete="email"
                 placeholder="your.email@school.com"
-                style={{
-                  width: '100%',
-                  padding: '10px 14px',
-                  border: '1.5px solid #E0D8CC',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  color: '#2C3E50',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                  background: '#FAFAF8',
-                }}
+                className="login-input w-full px-4 py-3 rounded-xl transition-all"
               />
             </div>
 
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#2C3E50', marginBottom: 6 }}>
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold mb-2"
+                style={{ color: 'var(--wrife-text-main)' }}
+              >
                 Password
               </label>
               <input
+                id="password"
                 type="password"
                 name="password"
                 required
                 autoComplete="current-password"
                 placeholder="••••••••"
-                style={{
-                  width: '100%',
-                  padding: '10px 14px',
-                  border: '1.5px solid #E0D8CC',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  color: '#2C3E50',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                  background: '#FAFAF8',
-                }}
+                className="login-input w-full px-4 py-3 rounded-xl transition-all"
               />
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
-              style={{
-                width: '100%',
-                background: '#27AE60',
-                color: 'white',
-                border: 'none',
-                padding: '12px',
-                borderRadius: 8,
-                fontSize: 15,
-                fontWeight: 700,
-                cursor: 'pointer',
-                letterSpacing: '-0.1px',
-              }}
+              className="w-full py-3.5 rounded-full font-bold text-white transition-all hover:opacity-90 shadow-sm"
+              style={{ backgroundColor: 'var(--wrife-green)' }}
             >
               Sign in
             </button>
           </form>
-        </div>
 
-        {/* Footer links */}
-        <div style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: '#7F8C8D' }}>
-          Don&apos;t have an account?{' '}
-          <Link href="https://wrife.co.uk/signup?role=teacher" style={{ color: '#27AE60', fontWeight: 600, textDecoration: 'none' }}>
-            Get access →
-          </Link>
-        </div>
-        <div style={{ textAlign: 'center', marginTop: 8, fontSize: 12, color: '#ABA89E' }}>
-          <Link href="https://wrife.co.uk/login" style={{ color: '#ABA89E', textDecoration: 'none' }}>
-            Sign in to WriFe main platform instead
-          </Link>
+          {/* Links */}
+          <div
+            className="mt-8 pt-6 text-center text-sm"
+            style={{
+              borderTop: '1px solid var(--wrife-border)',
+              color: 'var(--wrife-text-muted)',
+            }}
+          >
+            Don&apos;t have an account?{' '}
+            <Link
+              href="https://wrife.co.uk/signup?role=teacher"
+              className="font-semibold hover:underline"
+              style={{ color: 'var(--wrife-green)' }}
+            >
+              Get access →
+            </Link>
+          </div>
+
+          <div className="mt-4 text-center">
+            <Link
+              href="https://wrife.co.uk/login"
+              className="text-xs hover:underline"
+              style={{ color: 'var(--wrife-text-muted)' }}
+            >
+              Sign in to WriFe main platform instead
+            </Link>
+          </div>
         </div>
       </div>
+
     </div>
   );
 }

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     'Nine AI-powered writing tools that give every pupil real-time, individualised ' +
     'feedback. Built for the WriFe curriculum.',
-  metadataBase: new URL('https://resource.wrife.co.uk'),
+  metadataBase: new URL('https://resources.wrife.co.uk'),
   icons: {
     icon: '/favicon.png',
     apple: '/favicon.png',
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>

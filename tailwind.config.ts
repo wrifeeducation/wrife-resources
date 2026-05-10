@@ -65,7 +65,8 @@ const config: Config = {
         sm: '0.375rem',
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans:    ['Nunito', 'system-ui', 'sans-serif'],
+        display: ['Baloo 2', 'cursive'],
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',
