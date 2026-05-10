@@ -1,6 +1,14 @@
-// Tool catalogue moved to /dashboard to avoid route conflict with public landing page.
-import { redirect } from 'next/navigation';
+'use client';
+
+// Tool catalogue moved to /dashboard to avoid route conflict with the public landing page.
+// This stub keeps the client-reference manifest intact for Next.js build traces.
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function AppRootRedirect() {
-  redirect('/dashboard');
+  const router = useRouter();
+  useEffect(() => {
+    router.replace('/dashboard');
+  }, [router]);
+  return null;
 }
