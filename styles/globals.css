@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 210 29% 24%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 29% 24%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 29% 24%;
+    --primary: 145 63% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 47% 90%;
+    --secondary-foreground: 210 29% 24%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 30 79% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 145 63% 42%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-wrife-cream text-wrife-text antialiased;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-wrife-text;
+  }
+}
+
+@layer components {
+  /* WriFe card pattern */
+  .wrife-card {
+    @apply bg-white rounded-xl border border-wrife-cream-dark shadow-sm p-6;
+  }
+
+  /* Tool card */
+  .tool-card {
+    @apply bg-white rounded-xl border border-wrife-cream-dark shadow-sm p-6
+           transition-all duration-200 hover:shadow-md hover:border-wrife-green
+           cursor-pointer;
+  }
+
+  .tool-card-locked {
+    @apply bg-white rounded-xl border border-wrife-cream-dark shadow-sm p-6
+           transition-all duration-200 hover:shadow-md cursor-pointer opacity-80;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply bg-wrife-green text-white font-semibold px-6 py-3 rounded-lg
+           hover:bg-wrife-green-dark transition-colors duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply bg-wrife-cream-dark text-wrife-text font-medium px-5 py-2.5 rounded-lg
+           hover:bg-wrife-cream transition-colors duration-150;
+  }
+
+  /* Tier badge */
+  .tier-badge-free     { @apply bg-gray-100 text-gray-600 text-xs font-medium px-2 py-0.5 rounded-full; }
+  .tier-badge-standard { @apply bg-blue-100 text-blue-700 text-xs font-medium px-2 py-0.5 rounded-full; }
+  .tier-badge-full     { @apply bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded-full; }
+  .tier-badge-school   { @apply bg-purple-100 text-purple-700 text-xs font-medium px-2 py-0.5 rounded-full; }
+
+  /* Surface section headers */
+  .surface-header {
+    @apply text-xs font-semibold uppercase tracking-widest text-wrife-muted mb-4;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+}
