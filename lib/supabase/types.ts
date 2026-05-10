@@ -13,7 +13,7 @@ export type Json =
   | Json[];
 
 export type Tier = 'free' | 'standard' | 'full' | 'school';
-export type UserRole = 'teacher' | 'pupil' | 'school_admin' | 'wrife_admin';
+export type UserRole = 'teacher' | 'pupil' | 'admin' | 'school_admin' | 'parent';
 export type ToolSlug =
   | 'pwp'
   | 'dwp'
