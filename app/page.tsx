@@ -65,18 +65,14 @@ const HOW_IT_WORKS = [
 
 export default function LandingPage() {
   const router = useRouter();
-  const [checking, setChecking] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Redirect logged-in users straight to the tool catalogue
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) router.replace('/dashboard');
-      else setChecking(false);
+      if (data.session) setIsLoggedIn(true);
     });
   }, [router]);
-
-  if (checking) return null;
 
   return (
     <div className="min-h-screen" style={{ background: '#FBF8F1', fontFamily: 'Inter, system-ui, sans-serif' }}>
@@ -96,14 +92,23 @@ export default function LandingPage() {
           }}>Resources</span>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Link href="https://wrife.co.uk/login" style={{
-            background: 'transparent', border: '1.5px solid rgba(255,255,255,0.6)', color: 'white',
-            padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 600, textDecoration: 'none',
-          }}>Log in</Link>
-          <Link href="https://wrife.co.uk/signup" style={{
-            background: 'white', border: 'none', color: '#27AE60',
-            padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 700, textDecoration: 'none',
-          }}>Get access</Link>
+          {isLoggedIn ? (
+            <Link href="/dashboard" style={{
+              background: 'white', border: 'none', color: '#27AE60',
+              padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 700, textDecoration: 'none',
+            }}>Go to dashboard →</Link>
+          ) : (
+            <>
+              <Link href="/login" style={{
+                background: 'transparent', border: '1.5px solid rgba(255,255,255,0.6)', color: 'white',
+                padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 600, textDecoration: 'none',
+              }}>Log in</Link>
+              <Link href="https://wrife.co.uk/signup" style={{
+                background: 'white', border: 'none', color: '#27AE60',
+                padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 700, textDecoration: 'none',
+              }}>Get access</Link>
+            </>
+          )}
         </div>
       </nav>
 
