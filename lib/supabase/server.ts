@@ -29,40 +29,32 @@ function cookieDomain(): string | undefined {
 export function createClient() {
   const cookieStore = cookies();
   const domain = cookieDomain();
+  const isProduction = process.env.NODE_ENV === 'production';
 
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
+        // @supabase/ssr ≥ 0.4 requires getAll/setAll; the old get/set/remove
+        // API was removed in 0.5.x. Using the new API ensures cookies are read
+        // and written correctly, which fixes the login → dashboard redirect loop.
+        getAll() {
+          return cookieStore.getAll();
         },
-        set(name: string, value: string, options: Record<string, unknown>) {
+        setAll(cookiesToSet) {
           try {
-            cookieStore.set({
-              name,
-              value,
-              ...options,
-              ...(domain ? { domain } : {}),
-              sameSite: 'lax',
-              secure: process.env.NODE_ENV === 'production',
-            });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, {
+                ...options,
+                ...(domain ? { domain } : {}),
+                sameSite: isProduction ? 'none' : 'lax',
+                secure: isProduction,
+              })
+            );
           } catch {
-            // Server Component — cookie writes are allowed from Route Handlers only
-          }
-        },
-        remove(name: string, options: Record<string, unknown>) {
-          try {
-            cookieStore.set({
-              name,
-              value: '',
-              ...options,
-              ...(domain ? { domain } : {}),
-              maxAge: 0,
-            });
-          } catch {
-            // Server Component
+            // Silently ignored when called from a Server Component (read-only
+            // context). Cookie writes succeed in Server Actions and Route Handlers.
           }
         },
       },
