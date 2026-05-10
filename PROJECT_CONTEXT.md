@@ -1,58 +1,51 @@
-# WriFe Resource App (resource.wrife.co.uk)
-*Last updated: 2026-05-10 · Session 4*
+# WriFe Resource App (resources.wrife.co.uk)
+*Last updated: 2026-05-10 · Session 6*
 
 ## Current state
-**Session 1 scaffold is complete and building.** The Next.js 14 App Router project exists in the workspace root with zero TypeScript errors and a clean production build. Auth gate, subscription context, tool catalogue homepage, PaywallModal, and all 9 tool routes (placeholder pages) are wired. The 3 SQL migration files are ready to run in Supabase. `lib/data/pwp-formulas.ts` and `lib/data/dwp-prompts.ts` are in place. No AI tool logic exists yet — just the shell that receives it.
+All 9 AI tools are fully built and functional. Auth is self-contained (local login page). All tools built with Haiku (`claude-haiku-4-5-20251001`). Awaiting: (1) Michael to run `git push` to deploy to Vercel, (2) Stripe integration, (3) fix `NEXT_PUBLIC_APP_URL` env var in Vercel.
 
 ## Next steps
-1. **Run the 3 SQL migrations** in Supabase Studio (project `gzmgjkbtsvezfclmreru`) — paste 001, 002, 003 in order
-2. **Create `.env.local`** — copy from `.env.local.example`, fill in real Supabase keys + Anthropic key
-3. **Push to GitHub** — create `wrife/wrife-resource` repo and push this folder
-4. **Session 2 (Stripe)** — wire checkout, portal, webhook, subscription gating end-to-end
-5. **Session 3 (PWP App)** — build the first AI tool using `lib/data/pwp-formulas.ts`
+1. **Deploy** — Michael runs `git add -A && git commit -m "feat: build all 9 AI lesson tools" && git push` from `wrifeapp` repo dir
+2. **Fix NEXT_PUBLIC_APP_URL in Vercel** — should be `https://resources.wrife.co.uk` (with 's')
+3. **Stripe integration** — wire checkout, portal, webhook, subscription gating end-to-end (needs Stripe credentials from Michael)
 
 ## Key decisions
-- **Stack:** Next.js 14 App Router + Supabase (`gzmgjkbtsvezfclmreru`) + Stripe + Anthropic + Vercel
-- **Subscription gate:** All 9 AI tools = Full Teacher (£99/yr); soft paywall modal for Free/Standard
-- **Auth sharing:** Cookies scoped to `.wrife.co.uk` — SSO with app.wrife.co.uk automatic
-- **AI model mix:** Haiku for PWP + DWP; Sonnet for the 7 lesson tools
-- **Pricing:** Free / Standard £49/yr / Full £99/yr / School = Custom
-- **Brand colour:** #27AE60 (WriFe green) throughout — confirmed from spec and L29 demo
+- **Stack:** Next.js 14 App Router + Supabase (`gzmgjkbtsvezfclmreru`) + Anthropic + Vercel
+- **Auth:** Self-contained login at `/login` — no cross-domain SSO from wrife.co.uk (cookies don't share without matching domain config)
+- **AI model:** Haiku (`claude-haiku-4-5-20251001`) for PWP + DWP; use same for lesson tools unless complexity demands Sonnet
+- **API key:** Shared Anthropic API key across all WriFe apps — simpler to manage
+- **Subscription gate:** All 9 AI tools = Full Teacher; soft paywall modal for Free/Standard
+- **Brand colour:** #27AE60 (WriFe green) throughout
 
 ## Files & locations
-- `app/(app)/page.tsx` — tool catalogue homepage (both surfaces, all 9 cards)
-- `app/(app)/layout.tsx` — auth gate + subscription context provider (server component)
-- `components/PaywallModal.tsx` — soft paywall (shown on click for Free/Standard users)
-- `components/ToolCard.tsx` — card with unlock check, paywall trigger, or Link
-- `components/Header.tsx` — sticky nav with tier badge and upgrade CTA
-- `lib/subscription/gate.ts` — `canUseTool()`, tier ranks, `TOOL_REQUIREMENTS`
-- `lib/subscription/context.tsx` — `SubscriptionProvider` + `useSubscription()` hook
+- `app/login/page.tsx` — local login page (WriFe brand styling, server component)
+- `app/login/actions.ts` — `signIn()` server action using Supabase signInWithPassword
+- `app/(app)/layout.tsx` — auth gate redirecting to `/login?redirectTo=...`
+- `app/(app)/daily/pwp/page.tsx` — PWP Practice tool (full UI, AI feedback)
+- `app/(app)/daily/dwp/page.tsx` — DWP Daily Writing Practice tool (full UI, AI feedback)
+- `app/(app)/lesson/connect-grid/page.tsx` — Connect Grid Tutor (3×3 planning grid, per-cell coaching)
+- `app/(app)/lesson/sentence-coach/page.tsx` — Sentence Quality Coach (vocab/grammar/originality scores)
+- `app/(app)/lesson/story-types/page.tsx` — Story Type Identifier (12 WriFe story types)
+- `app/(app)/lesson/composition/page.tsx` — Composition Reviewer (LSC scaffold: Lead/Support/Close)
+- `app/(app)/lesson/editing-doctor/page.tsx` — Editing Doctor (10 modes: L42–L51)
+- `app/(app)/lesson/genre-coach/page.tsx` — Genre Coach (narrative/non-fiction/persuasive/poetry)
+- `app/(app)/lesson/project-mentor/page.tsx` — Project Mentor (5 stages: idea → publishing)
+- `app/api/tools/pwp/route.ts` — PWP API: Haiku, formula assessment, JSON response
+- `app/api/tools/dwp/route.ts` — DWP API: Haiku, free-writing feedback, JSON response
+- `app/api/tools/connect-grid/route.ts` — Connect Grid API: coachingText, exampleSentence, nudge
+- `app/api/tools/sentence-coach/route.ts` — Sentence Coach API: score, vocab, grammar, originality, feedback
+- `app/api/tools/story-types/route.ts` — Story Types API: storyType (1 of 12), confidence, explanation, keyFeatures
+- `app/api/tools/composition/route.ts` — Composition API: leadScore/supportScore/closeScore, feedback, topSuggestion
+- `app/api/tools/editing-doctor/route.ts` — Editing Doctor API: score, diagnosis, issues (original→issue→fix), praise
+- `app/api/tools/genre-coach/route.ts` — Genre Coach API: score, assessment, features (found/missing), topTip, praise
+- `app/api/tools/project-mentor/route.ts` — Project Mentor API: encouragement, stageAdvice, nextSteps, keyQuestion
 - `lib/supabase/server.ts` — server client with `.wrife.co.uk` cookie domain
-- `lib/supabase/admin.ts` — service-role client (API routes only)
-- `lib/supabase/types.ts` — hand-written DB types (regenerate with supabase CLI after migration)
-- `lib/ai/client.ts` — Anthropic client + MODELS constants (Haiku / Sonnet)
-- `lib/data/pwp-formulas.ts` — 67 curriculum-accurate PWP formulas with helper functions
-- `lib/data/dwp-prompts.ts` — 365 DWP prompts, rotation algorithm, helper functions
-- `supabase/migrations/001_init.sql` — tables: profiles, schools, subscriptions, ai_sessions, ai_attempts, daily_streaks, usage_quotas, classes, class_enrolments
-- `supabase/migrations/002_rls.sql` — RLS policies for all tables
-- `supabase/migrations/003_functions.sql` — `get_user_tier()` + `increment_usage()` RPCs
-- `.env.local.example` — all required env vars with comments
-- `next.config.mjs` — active Next.js config (next.config.ts is intentionally empty placeholder)
-
-## Session 1 verification checklist
-- [x] Zero TypeScript errors (`npx tsc --noEmit` → clean)
-- [x] Production build completes — all 13 routes compiled
-- [x] All 9 tool routes exist in app-paths-manifest
-- [x] Auth gate in `(app)/layout.tsx` redirects unauthenticated users to app.wrife.co.uk/login
-- [x] PaywallModal fires for Free/Standard users on tool card click
-- [ ] Migrations run in Supabase Studio (manual — paste 001, 002, 003 in order)
-- [ ] `get_user_tier(auth.uid())` returns 'free' for a new test user
+- `lib/data/pwp-formulas.ts` — 67 PWP formulas with variations
+- `lib/data/dwp-prompts.ts` — 365 DWP prompts, day-of-week rotation
 
 ## Open questions
+- Stripe monthly pricing: est. £4.90 / £9.90 (needed before Stripe integration)
 - School License pricing: flat fee or per-teacher seat?
-- Free trial duration: 14 or 30 days?
-- Monthly pricing: est. £4.90 / £9.90 (needed before Session 2 Stripe products)
-- Brand assets: mascot images available in Graphics/mascot_pack/ — ready to use
 
 ---
 
@@ -60,7 +53,9 @@
 
 | # | Date | Summary |
 |---|------|---------|
-| 4 | 2026-05-10 | Session 1 complete: Next.js 14 scaffold, auth gate, subscription context, all 9 tool routes, PaywallModal, 3 SQL migrations, zero TS errors, clean production build |
-| 3 | 2026-05-10 | Curriculum-accurate TypeScript conversion of both PWP formulas and DWP prompts |
-| 2 | 2026-05-09 | Confirmed 7 of 10 TBD decisions; generated initial PWP and DWP data files |
+| 6 | 2026-05-10 | Built all 7 remaining lesson tools (Connect Grid, Sentence Coach, Story Types, Composition, Editing Doctor, Genre Coach, Project Mentor) — all 9 tools now complete, awaiting git push |
+| 5 | 2026-05-10 | Built local login page, fixed cross-domain auth, set ANTHROPIC_API_KEY, tested PWP + DWP end-to-end — both tools live and working |
+| 4 | 2026-05-10 | Built PWP Practice + DWP tools, URL sweep (app.wrife.co.uk → wrife.co.uk), deployed to resources.wrife.co.uk |
+| 3 | 2026-05-10 | Next.js 14 scaffold, auth gate, subscription context, all 9 tool routes, 3 SQL migrations |
+| 2 | 2026-05-10 | Curriculum-accurate TypeScript conversion of PWP formulas and DWP prompts |
 | 1 | 2026-05-09 | Initial review — spec fully read, project understood, plan of work delivered |
