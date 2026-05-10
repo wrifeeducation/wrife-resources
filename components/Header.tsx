@@ -24,7 +24,7 @@ export function Header({ user, tier }: HeaderProps) {
     <header className="sticky top-0 z-40 bg-white border-b border-wrife-cream-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-wrife-green flex items-center justify-center">
             <BookOpen className="w-4 h-4 text-white" />
           </div>
@@ -35,7 +35,7 @@ export function Header({ user, tier }: HeaderProps) {
 
         {/* Nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/"
+          <Link href="/dashboard"
             className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
             All Tools
           </Link>
