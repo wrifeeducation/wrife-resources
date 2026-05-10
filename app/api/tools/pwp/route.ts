@@ -86,10 +86,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(result);
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
     console.error('[PWP API]', err);
     return NextResponse.json(
-      { error: `Debug: ${msg}` },
+      { error: 'Something went wrong. Please try again.' },
       { status: 500 }
     );
   }
