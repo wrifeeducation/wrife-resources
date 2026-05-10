@@ -102,7 +102,7 @@ export function PaywallModal({
         <p className="text-center text-xs text-wrife-muted mt-4">
           Already subscribed?{' '}
           <a
-            href="https://app.wrife.co.uk/login"
+            href="https://wrife.co.uk/login"
             className="text-wrife-green hover:underline"
           >
             Sign in to your account

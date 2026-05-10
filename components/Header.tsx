@@ -43,7 +43,7 @@ export function Header({ user, tier }: HeaderProps) {
             className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
             Daily Practice
           </Link>
-          <Link href="https://app.wrife.co.uk"
+          <Link href="https://wrife.co.uk"
             className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
             ← WriFe App
           </Link>

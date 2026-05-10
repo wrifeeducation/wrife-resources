@@ -90,8 +90,8 @@ export default function ResourcesPage() {
           <span style={{ background: 'rgba(255,255,255,0.2)', color: 'white', fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 10, letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>Resources</span>
         </Link>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Link href="https://app.wrife.co.uk/login" style={{ background: 'transparent', border: '1.5px solid rgba(255,255,255,0.6)', color: 'white', padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>Log in</Link>
-          <Link href="https://app.wrife.co.uk/signup" style={{ background: 'white', border: 'none', color: '#27AE60', padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>Get access</Link>
+          <Link href="https://wrife.co.uk/login" style={{ background: 'transparent', border: '1.5px solid rgba(255,255,255,0.6)', color: 'white', padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>Log in</Link>
+          <Link href="https://wrife.co.uk/signup" style={{ background: 'white', border: 'none', color: '#27AE60', padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>Get access</Link>
         </div>
       </nav>
 
@@ -157,7 +157,7 @@ export default function ResourcesPage() {
           <div style={{ fontSize: 14, fontWeight: 700, color: 'white', marginBottom: 4 }}>Ready for real-time AI feedback?</div>
           <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Get access to all 9 AI writing tools for your class</div>
         </div>
-        <Link href="https://app.wrife.co.uk/signup?role=teacher" style={{ background: '#E8922B', color: 'white', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+        <Link href="https://wrife.co.uk/signup?role=teacher" style={{ background: '#E8922B', color: 'white', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           Get AI access →
         </Link>
       </div>

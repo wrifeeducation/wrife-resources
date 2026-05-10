@@ -12,7 +12,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   if (!user) {
     const returnTo = encodeURIComponent('https://resource.wrife.co.uk/dashboard');
-    redirect(`https://app.wrife.co.uk/login?redirect=${returnTo}`);
+    redirect(`https://wrife.co.uk/login?redirect=${returnTo}`);
   }
 
   // Resolve subscription tier server-side so it's available to all child pages instantly

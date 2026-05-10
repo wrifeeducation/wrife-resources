@@ -96,11 +96,11 @@ export default function LandingPage() {
           }}>Resources</span>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Link href="https://app.wrife.co.uk/login" style={{
+          <Link href="https://wrife.co.uk/login" style={{
             background: 'transparent', border: '1.5px solid rgba(255,255,255,0.6)', color: 'white',
             padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 600, textDecoration: 'none',
           }}>Log in</Link>
-          <Link href="https://app.wrife.co.uk/signup" style={{
+          <Link href="https://wrife.co.uk/signup" style={{
             background: 'white', border: 'none', color: '#27AE60',
             padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 700, textDecoration: 'none',
           }}>Get access</Link>
@@ -128,7 +128,7 @@ export default function LandingPage() {
               background: '#E8922B', color: 'white', padding: '10px 20px',
               borderRadius: 8, fontSize: 14, fontWeight: 700, textDecoration: 'none',
             }}>See free resources →</Link>
-            <Link href="https://app.wrife.co.uk/signup" style={{
+            <Link href="https://wrife.co.uk/signup" style={{
               background: 'white', color: '#2C3E50', padding: '10px 18px',
               borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none',
               border: '1px solid #E0D8CC',
@@ -161,7 +161,7 @@ export default function LandingPage() {
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           {/* Pupil card */}
-          <Link href="https://app.wrife.co.uk/login" style={{
+          <Link href="https://wrife.co.uk/login" style={{
             background: '#E8922B', borderRadius: 12, padding: '14px 16px',
             textDecoration: 'none', height: 110, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
           }}>
@@ -180,7 +180,7 @@ export default function LandingPage() {
           </Link>
 
           {/* Teacher card */}
-          <Link href="https://app.wrife.co.uk/signup?role=teacher" style={{
+          <Link href="https://wrife.co.uk/signup?role=teacher" style={{
             background: '#27AE60', borderRadius: 12, padding: '14px 16px',
             textDecoration: 'none', height: 110, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
           }}>
@@ -307,7 +307,7 @@ export default function LandingPage() {
           <div style={{ fontSize: 14, fontWeight: 700, color: 'white', marginBottom: 3 }}>Set up your class in 60 seconds</div>
           <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Everything your pupils need, lesson by lesson</div>
         </div>
-        <Link href="https://app.wrife.co.uk/signup?role=teacher" style={{
+        <Link href="https://wrife.co.uk/signup?role=teacher" style={{
           background: '#E8922B', color: 'white', padding: '10px 18px',
           borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: 'none',
         }}>Create my class →</Link>

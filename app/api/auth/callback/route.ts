@@ -28,6 +28,6 @@ export async function GET(request: Request) {
     }
   }
 
-  // Auth failed — redirect to app.wrife.co.uk/login
-  return NextResponse.redirect('https://app.wrife.co.uk/login?error=auth_callback_failed');
+  // Auth failed — redirect to wrife.co.uk/login
+  return NextResponse.redirect('https://wrife.co.uk/login?error=auth_callback_failed');
 }
