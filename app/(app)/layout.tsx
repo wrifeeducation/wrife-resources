@@ -11,8 +11,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   } = await supabase.auth.getUser();
 
   if (!user) {
-    const returnTo = encodeURIComponent('https://resource.wrife.co.uk/dashboard');
-    redirect(`https://wrife.co.uk/login?redirect=${returnTo}`);
+    const returnTo = encodeURIComponent('/dashboard');
+    redirect(`/login?redirectTo=${returnTo}`);
   }
 
   // Resolve subscription tier server-side so it's available to all child pages instantly
