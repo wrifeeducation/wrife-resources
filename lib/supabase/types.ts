@@ -194,6 +194,29 @@ export interface Database {
         Insert: Omit<Database['public']['Tables']['class_members']['Row'], 'id' | 'joined_at'>;
         Update: Partial<Database['public']['Tables']['class_members']['Insert']>;
       };
+      /**
+       * Shared cross-app event bridge (owned by wrife-website).
+       * resources.wrife INSERTs only — never ALTERs this table.
+       */
+      learning_events: {
+        Row: {
+          id: string;
+          pupil_id: string;
+          app: 'pwp' | 'ip' | 'dwp' | 'resources';
+          event_type: string;
+          event_data: Json;
+          class_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          pupil_id: string;
+          app: 'pwp' | 'ip' | 'dwp' | 'resources';
+          event_type: string;
+          event_data?: Json;
+          class_id?: string | null;
+        };
+        Update: never; // sub-apps never UPDATE learning_events rows
+      };
     };
     Functions: {
       get_user_tier: {

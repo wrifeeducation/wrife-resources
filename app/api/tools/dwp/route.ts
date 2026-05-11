@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { checkApiAccess } from '@/lib/subscription/checkApiAccess';
+import { logToolUse } from '@/lib/events/logToolUse';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -51,6 +53,10 @@ Respond with this exact JSON structure:
 
 export async function POST(req: NextRequest) {
   try {
+    // ── Auth + tier gate ──────────────────────────────────────────────────────
+    const access = await checkApiAccess('dwp');
+    if (access.error) return access.error;
+
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
         { error: 'AI service not configured yet. Add ANTHROPIC_API_KEY to Vercel env vars.' },
@@ -77,6 +83,16 @@ export async function POST(req: NextRequest) {
     const raw = message.content[0].type === 'text' ? message.content[0].text : '';
     const clean = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
     const result: DWPResponse = JSON.parse(clean);
+
+    // ── Log usage (fire-and-forget) ───────────────────────────────────────────
+    void logToolUse({
+      userId: access.userId,
+      eventType: 'dwp_session',
+      eventData: {
+        prompt_type: body.promptType,
+        word_count: body.wordCount,
+      },
+    });
 
     return NextResponse.json(result);
   } catch (err) {

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { checkApiAccess } from '@/lib/subscription/checkApiAccess';
+import { logToolUse } from '@/lib/events/logToolUse';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -65,6 +67,9 @@ Respond with this exact JSON:
 
 export async function POST(req: NextRequest) {
   try {
+    const access = await checkApiAccess('composition');
+    if (access.error) return access.error;
+
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: 'AI service not configured.' }, { status: 503 });
     }
@@ -88,6 +93,8 @@ export async function POST(req: NextRequest) {
     const raw = message.content[0].type === 'text' ? message.content[0].text : '';
     const clean = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
     const result: CompositionResponse = JSON.parse(clean);
+
+    void logToolUse({ userId: access.userId, eventType: 'composition_session', eventData: { genre: body.genre, overall_score: result.overallScore } });
 
     return NextResponse.json(result);
   } catch (err) {

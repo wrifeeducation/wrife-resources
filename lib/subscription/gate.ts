@@ -1,6 +1,6 @@
 import type { Tier, ToolSlug } from '@/lib/supabase/types';
 
-export type { Tier };
+export type { Tier, ToolSlug };
 
 export const TOOL_REQUIREMENTS: Record<ToolSlug, Tier> = {
   'pwp':              'full',
