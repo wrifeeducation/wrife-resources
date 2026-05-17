@@ -85,30 +85,47 @@ export default function JoinPage() {
     setStep('loading');
 
     try {
-      const res = await fetch('/api/pupil/join', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ class_code: classCode.trim(), username: username.trim(), pin }),
-      });
-      const json = await res.json();
+      const supabase = createClient();
 
-      if (!res.ok) {
-        setLoginError(json.error ?? 'Could not log in.');
+      // Call the shared Platform pupil-login Edge Function (same as PWP Studio + DWP)
+      const { data, error } = await supabase.functions.invoke('pupil-login', {
+        body: {
+          classCode: classCode.trim().toUpperCase(),
+          username:  username.trim().toLowerCase(),
+          pin,
+        },
+      });
+
+      if (error) {
+        setLoginError('Could not connect. Please try again.');
         setStep('login');
         setLoginLoading(false);
         return;
       }
 
-      // Exchange magic-link token for a Supabase session
-      const supabase = createClient();
-      const { error: verifyErr } = await supabase.auth.verifyOtp({
-        email: json.email,
-        token: json.token,
-        type: 'magiclink',
+      if (data?.error) {
+        const msg: string = data.error as string;
+
+        // School pupils must log in via wrife.co.uk (Route A)
+        if (msg === 'SCHOOL_PUPIL_USE_HUB') {
+          window.location.replace('https://wrife.co.uk/pupil/login');
+          return;
+        }
+
+        setLoginError(msg ?? 'Could not log in. Check your details and try again.');
+        setStep('login');
+        setLoginLoading(false);
+        return;
+      }
+
+      // Establish Supabase session from the returned tokens
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token:  data.access_token as string,
+        refresh_token: data.refresh_token as string,
       });
 
-      if (verifyErr) {
-        setLoginError('Sign-in failed. Please try again.');
+      if (sessionError) {
+        setLoginError('Login succeeded but session could not be established. Please try again.');
         setStep('login');
         setLoginLoading(false);
         return;

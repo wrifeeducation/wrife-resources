@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { SubscriptionProvider } from '@/lib/subscription/context';
 import { Header } from '@/components/Header';
+import { HubEntryDetector } from '@/components/HubEntryDetector';
 import type { Tier } from '@/lib/subscription/gate';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -29,6 +30,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <SubscriptionProvider tier={tier}>
+      {/* Detect Route A hub SSO entry before Supabase SDK clears the hash */}
+      <HubEntryDetector />
       <Header user={user} tier={tier} role={role} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
     </SubscriptionProvider>

@@ -7,6 +7,7 @@ import { BookOpen, ChevronDown, Menu, X, LogOut, User, LayoutDashboard, Home, Gr
 import { createClient } from '@/lib/supabase/client';
 import type { Tier } from '@/lib/subscription/gate';
 import { tierLabel } from '@/lib/subscription/gate';
+import { isHubEntry } from '@/lib/auth/hubEntry';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface HeaderProps {
@@ -32,7 +33,13 @@ export function Header({ user, tier, role = 'teacher' }: HeaderProps) {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileOpen, setMobileOpen]   = useState(false);
+  const [showHubBack, setShowHubBack] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Detect Route A hub SSO entry for ← WriFe back button
+  useEffect(() => {
+    setShowHubBack(isHubEntry());
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -75,6 +82,14 @@ export function Header({ user, tier, role = 'teacher' }: HeaderProps) {
               <Link href="/dashboard" className="text-sm text-wrife-muted hover:text-wrife-text transition-colors">
                 All Tools
               </Link>
+              {showHubBack && (
+                <a
+                  href="https://wrife.co.uk/pupil/dashboard"
+                  className="text-sm font-semibold text-wrife-green hover:opacity-80 transition-opacity"
+                >
+                  ← WriFe
+                </a>
+              )}
             </>
           ) : (
             <>
@@ -225,6 +240,7 @@ export function Header({ user, tier, role = 'teacher' }: HeaderProps) {
               ? [
                   { href: '/my-tasks', label: 'My Tasks' },
                   { href: '/dashboard', label: 'All Tools' },
+                  ...(showHubBack ? [{ href: 'https://wrife.co.uk/pupil/dashboard', label: '← WriFe' }] : []),
                 ]
               : [
                   { href: '/dashboard', label: 'All Tools' },
