@@ -6,9 +6,16 @@ const nextConfig = {
   images: {
     domains: ['wrife.co.uk'],
   },
-  // Supabase's typed client produces `never` on complex selects when using
-  // hand-rolled Database types rather than auto-generated ones.
-  // Runtime behaviour is correct; suppress build errors here.
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'Content-Security-Policy', value: "frame-ancestors *" },
+        ],
+      },
+    ];
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
