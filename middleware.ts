@@ -1,13 +1,21 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { authCookieOptions } from '@/lib/supabase/cookieOptions';
 
 /**
  * Thin middleware that refreshes the Supabase session token on every request.
  * Without this, the JWT expires after 1 hour and the user is silently logged out.
  * The middleware does NOT do auth gating — that stays in each (app) layout.
+ *
+ * Cookie scope comes from the shared `authCookieOptions` helper so the refreshed
+ * token is written with the SAME domain (`.wrife.co.uk` in prod) as the server
+ * and browser clients. Previously this omitted `domain`, creating a duplicate
+ * host-only cookie that desynced the server session from the page.
  */
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
+
+  const cookieOpts = authCookieOptions(request.headers.get('host'));
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,15 +25,11 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, {
-              ...options,
-              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-              secure: process.env.NODE_ENV === 'production',
-            })
+            supabaseResponse.cookies.set(name, value, { ...options, ...cookieOpts })
           );
         },
       },
